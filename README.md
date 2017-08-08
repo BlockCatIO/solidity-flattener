@@ -7,6 +7,12 @@ This is also useful for quickly throwing your source into [Remix](https://ethere
 
 >**NOTE:** This script does not work with imports that are aliased (i.e. `import './A.sol' as B;` ).
 
+# Requirements
+
+* Python 3.5+, `pip`
+* `solc`, the [Solidity compiler](http://solidity.readthedocs.io/en/develop/installing-solidity.html#binary-packages)
+  * **Note:** The NPM version of the compiler does not expose enough functionality to satisfy the requirements of this tool.
+
 # Installation
 
 `pip install solidity-flattener`
