@@ -32,6 +32,20 @@ optional arguments:
                         See solc --help for more information.
 ```
 
+# Examples
+
+To flatten a Solidity file:
+
+`solidity_flattener StandardToken.sol`
+
+To output to a file instead of standard out:
+
+`solidity_flattener --output StandardTokenFlattened.sol StandardToken.sol`
+
+To provide [import path redirections](http://solidity.readthedocs.io/en/develop/using-the-compiler.html):
+
+`solidity_flattener --solc-paths="my_solidity_path=my_actual_path" StandardToken.sol`
+
 # Contributions
 
 Pull requests are welcome, or feel free to open an issue to discuss.
