@@ -1,5 +1,5 @@
 # Solidity Flattener
-*A BlockCAT Technologies contribution -- https://blockcat.io*
+*A BlockCAT Technologies contribution - https://blockcat.io*
 
 **Are you tired of having to manually combine all of your files** when verifying your contract source on [Etherscan](https://etherscan.io)? This script automatically traverses the dependency graph and outputs all of your imports in the correct order, ready to be pasted into the contract verifier.
 
