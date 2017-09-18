@@ -88,7 +88,10 @@ def main():
 	args = parser.parse_args()
 
 	if args.solc_paths:
-		solc_args = ["solc", args.solc_paths, "--ast", args.target_solidity_file]
+                solc_args = args.solc_paths.split()
+                solc_args.insert(0, "solc")
+                solc_args.append("--ast")
+                solc_args.append(args.target_solidity_file)
 	else:
 		solc_args = ["solc", "--ast", args.target_solidity_file]
 	solc_proc = subprocess.run(solc_args, stdout=subprocess.PIPE, universal_newlines=True)
