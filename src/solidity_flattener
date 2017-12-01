@@ -7,7 +7,7 @@ import argparse as ap
 import sys
 import subprocess
 
-def flatten_contract(solc_AST, output_dest):
+def flatten_contract(solc_AST, output_dest, sol_version):
 	contract_regex = re.compile(r'(ContractDefinition \"(.+)\"(?:\n\s+Gas costs: \d+)?\n(?: +.+\n)+)')
 	contract_source_regex = re.compile(r'ContractDefinition \".+\"(?:\n\s+Gas costs: \d+)?\n +Source: "(.+)"')
 	inheritance_regex = re.compile(r'InheritanceSpecifier(?:\n\s+Gas costs: \d+)?\n\s+Source: "(.+)"')
@@ -39,7 +39,7 @@ def flatten_contract(solc_AST, output_dest):
 		if not found_contract_source:
 			print("FATAL: '{name}' has no attached contract source. Aborting.".format(name=contract_name), file=sys.stderr)
 			return
-
+		
 		contract_sources[contract_name] = found_contract_source.group(1)
 
 	contracts_with_sources = set(contract_sources.keys())
@@ -53,7 +53,7 @@ def flatten_contract(solc_AST, output_dest):
 		return
 
 	processed_contracts = set()
-	output_solidity_code = "pragma solidity ^0.4.13;\n\n"
+	output_solidity_code = "pragma solidity {};\n\n".format(sol_version)
 	while processed_contracts != contracts_with_sources:
 		# print(processed_contracts, "vs", contracts_with_sources)
 		for cname, cdepends in dependency_graph.items():
@@ -85,6 +85,8 @@ def main():
 		help="Specifies the output destination filename. Outputs to stdout by default.")
 	parser.add_argument("--solc-paths", default="",
 		help="Specifies the path replacements to pass onto solidity. See solc --help for more information.")
+	parser.add_argument("--sol-version", default="^0.4.13",
+		help="Specifies the solidity language version.")
 	args = parser.parse_args()
 
 	if args.solc_paths:
@@ -93,7 +95,7 @@ def main():
 		solc_args = ["solc", "--ast", args.target_solidity_file]
 	solc_proc = subprocess.run(solc_args, stdout=subprocess.PIPE, universal_newlines=True)
 	solc_proc.check_returncode()
-	flatten_contract(solc_proc.stdout, args.output)
+	flatten_contract(solc_proc.stdout, args.output, args.sol_version)
 
 if __name__ == '__main__':
 	main()
