@@ -12,6 +12,7 @@ def flatten_contract(solc_AST, output_dest):
 	contract_source_regex = re.compile(r'ContractDefinition \".+\"(?:\n\s+Gas costs: \d+)?\n +Source: "(.+)"')
 	inheritance_regex = re.compile(r'InheritanceSpecifier(?:\n\s+Gas costs: \d+)?\n\s+Source: "(.+)"')
 	using_for_regex = re.compile(r'\n  UserDefinedTypeName "(.+)"')
+	carriage_return_regex = re.compile(r'\r')
 
 	contracts = contract_regex.findall(solc_AST)
 	contract_sources = {}
@@ -39,7 +40,7 @@ def flatten_contract(solc_AST, output_dest):
 		if not found_contract_source:
 			print("FATAL: '{name}' has no attached contract source. Aborting.".format(name=contract_name), file=sys.stderr)
 			return
-
+		
 		contract_sources[contract_name] = found_contract_source.group(1)
 
 	contracts_with_sources = set(contract_sources.keys())
@@ -69,7 +70,7 @@ def flatten_contract(solc_AST, output_dest):
 				print("\t\t" + unsat_depend + " (requires: {})".format(dependency_graph[unsat_depend]), file=sys.stderr)
 			return
 
-		output_solidity_code += ast.literal_eval('\"' + contract_sources[cname] + '\"') + "\n\n"
+		output_solidity_code += re.sub(carriage_return_regex, '', ast.literal_eval('\"' + contract_sources[cname] + '\"')) + "\n\n"
 		processed_contracts.update([cname])
 		del dependency_graph[cname]
 
