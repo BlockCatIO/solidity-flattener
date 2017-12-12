@@ -1,0 +1,7 @@
+#!/bin/bash
+echo "Did you change the version number in setup.py?"
+read
+rm -rf dist/
+mkdir dist/
+python3 setup.py bdist_wheel --universal
+twine upload dist/*
