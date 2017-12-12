@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # Author: Eric Huang, BlockCAT Technologies Inc.
 
+from __future__ import print_function
+
 import re
 import ast
 import argparse as ap
