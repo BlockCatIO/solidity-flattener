@@ -1,6 +1,6 @@
 import pytest
 
-from .. import flattener
+from .. import core
 
 def test_thingy():
     assert 1 == 1
