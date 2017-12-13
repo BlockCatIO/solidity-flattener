@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!python3
 # Author: Eric Huang, BlockCAT Technologies Inc.
 
 from __future__ import print_function
