@@ -8,7 +8,7 @@ setup(
     author='Eric Huang, BlockCAT Technologies Inc.',
     author_email='team@blockcat.io',
     url='https://github.com/BlockCatIO/solidity-flattener',
-    version='0.2.1',
+    version='0.2.2',
     packages=find_packages(exclude=["*tests"]),
     scripts=['bin/solidity_flattener']
 )
