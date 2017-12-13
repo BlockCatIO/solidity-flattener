@@ -1,0 +1,4 @@
+#!/usr/bin/env python3
+import flattener.core
+
+flattener.core.main()

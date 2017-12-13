@@ -8,6 +8,6 @@ setup(
     author='Eric Huang, BlockCAT Technologies Inc.',
     author_email='team@blockcat.io',
     url='https://github.com/BlockCatIO/solidity-flattener',
-    version='0.2.0',
-    scripts=['src/solidity_flattener']
+    version='0.2.1',
+    scripts=['bin/solidity_flattener']
 )
