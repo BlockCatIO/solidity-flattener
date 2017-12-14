@@ -37,6 +37,9 @@ optional arguments:
                         Specifies the path replacements to pass onto solidity.
                         Can be specified multiple times. See solc --help for
                         more information.
+  --solc-allow-paths SOLC_ALLOW_PATHS
+                        Specifies allowed paths for solidity imports. See solc
+                        --help for more information.
 ```
 
 # Examples
