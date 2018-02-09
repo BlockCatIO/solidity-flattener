@@ -87,12 +87,17 @@ def main():
 		help="Specifies the output destination filename. Outputs to stdout by default.")
 	parser.add_argument("--solc-paths", default="",
 		help="Specifies the path replacements to pass onto solidity. See solc --help for more information.")
+	parser.add_argument("--solc-allow-paths", default="",
+		help="Specifies allowed paths to pass onto solidity. See solc --help for more information.")
 	args = parser.parse_args()
 
+	solc_args = ["solc"]
 	if args.solc_paths:
-		solc_args = ["solc", args.solc_paths, "--ast", args.target_solidity_file]
-	else:
-		solc_args = ["solc", "--ast", args.target_solidity_file]
+		solc_args.append(args.solc_paths)
+	if args.allow_paths:
+		solc_args.extend(["--allow-paths", args.allow_paths])
+	solc_args.extend(["--ast", args.target_solidity_file])
+
 	solc_proc = subprocess.run(solc_args, stdout=subprocess.PIPE, universal_newlines=True)
 	solc_proc.check_returncode()
 	flatten_contract(solc_proc.stdout, args.output)
