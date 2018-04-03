@@ -15,7 +15,7 @@ This is also useful for quickly throwing your source into [Remix](https://ethere
 
 # Installation
 
-`pip install solidity-flattener`
+`pip3 install solidity-flattener`
 
 # Usage
 ```
