@@ -91,11 +91,11 @@ def main():
 	        help="Specify list of paths (comma separated) to allow solc to import files from. See solc --help for more information.")
 	args = parser.parse_args()
 
-	solc_command = ["solc"]
-	solc_command += [args.solc_paths] if args.solc_paths else []
-	solc_command += ["--ast"]
-	solc_command += ["--allow-paths", args.allow_paths] if args.allow_paths else []
-	solc_command += [args.target_solidity_file]
+	solc_args = ["solc"]
+	solc_args += [args.solc_paths] if args.solc_paths else []
+	solc_args += ["--ast"]
+	solc_args += ["--allow-paths", args.allow_paths] if args.allow_paths else []
+	solc_args += [args.target_solidity_file]
 	
 	solc_proc = subprocess.run(solc_args, stdout=subprocess.PIPE, universal_newlines=True)
 	solc_proc.check_returncode()
