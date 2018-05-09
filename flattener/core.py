@@ -95,9 +95,10 @@ def main():
 	if args.solc_allow_paths:
 		solc_args.extend(['--allow-paths', args.solc_allow_paths])
 	solc_args.extend(["--ast", args.target_solidity_file])
-	solc_proc = subprocess.run(solc_args, stdout=subprocess.PIPE, universal_newlines=True)
+	solc_proc = subprocess.run(solc_args, stdout=subprocess.PIPE)
 	solc_proc.check_returncode()
-	flatten_contract(solc_proc.stdout, args.output)
+	# AST output could contain invalid utf-8 strings (e.g. when solc is trying to decode hex"...")
+	flatten_contract(solc_proc.stdout.decode('utf-8', 'ignore'), args.output)
 
 if __name__ == '__main__':
 	main()
