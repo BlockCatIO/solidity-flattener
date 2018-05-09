@@ -35,7 +35,11 @@ optional arguments:
                         stdout by default.
   --solc-paths SOLC_PATHS
                         Specifies the path replacements to pass onto solidity.
-                        See solc --help for more information.
+                        Can be specified multiple times. See solc --help for
+                        more information.
+  --solc-allow-paths SOLC_ALLOW_PATHS
+                        Specifies allowed paths for solidity imports. See solc
+                        --help for more information.
 ```
 
 # Examples

@@ -85,17 +85,20 @@ def main():
 		help="Specifies the target Solidity source file to flatten.")
 	parser.add_argument("--output", type=ap.FileType('w+'), default=sys.stdout, metavar="FILENAME",
 		help="Specifies the output destination filename. Outputs to stdout by default.")
-	parser.add_argument("--solc-paths", default="",
-		help="Specifies the path replacements to pass onto solidity. See solc --help for more information.")
+	parser.add_argument("--solc-paths", type=str, default=[], action='append',
+		help="Specifies the path replacements to pass onto solidity. Can be specified multiple times. See solc --help for more information.")
+	parser.add_argument("--solc-allow-paths", default="",
+		help="Specifies allowed paths for solidity imports. See solc --help for more information.")
 	args = parser.parse_args()
 
-	if args.solc_paths:
-		solc_args = ["solc", args.solc_paths, "--ast", args.target_solidity_file]
-	else:
-		solc_args = ["solc", "--ast", args.target_solidity_file]
-	solc_proc = subprocess.run(solc_args, stdout=subprocess.PIPE, universal_newlines=True)
+	solc_args = ["solc"] + args.solc_paths
+	if args.solc_allow_paths:
+		solc_args.extend(['--allow-paths', args.solc_allow_paths])
+	solc_args.extend(["--ast", args.target_solidity_file])
+	solc_proc = subprocess.run(solc_args, stdout=subprocess.PIPE)
 	solc_proc.check_returncode()
-	flatten_contract(solc_proc.stdout, args.output)
+	# AST output could contain invalid utf-8 strings (e.g. when solc is trying to decode hex"...")
+	flatten_contract(solc_proc.stdout.decode('utf-8', 'ignore'), args.output)
 
 if __name__ == '__main__':
 	main()
