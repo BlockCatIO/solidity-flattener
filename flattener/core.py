@@ -9,6 +9,13 @@ import argparse as ap
 import sys
 import subprocess
 
+def get_version():
+    responses = subprocess.check_output(['solc', '--version']).decode().split()
+    for r in responses:
+        try: return re.findall('([0-9]+\.[0-9]+\.[0-9]+)\+commit', r)[0]
+        except IndexError: continue
+    return "0.4.13"
+
 def flatten_contract(solc_AST, output_dest):
 	contract_regex = re.compile(r'(ContractDefinition \"(.+)\"(?:\n\s+Gas costs: \d+)?\n(?: +.+\n)+)')
 	contract_source_regex = re.compile(r'ContractDefinition \".+\"(?:\n\s+Gas costs: \d+)?\n +Source: "(.+)"')
@@ -55,7 +62,7 @@ def flatten_contract(solc_AST, output_dest):
 		return
 
 	processed_contracts = set()
-	output_solidity_code = "pragma solidity ^0.4.13;\n\n"
+	output_solidity_code = "pragma solidity ^%s;\n\n" % get_version()
 	while processed_contracts != contracts_with_sources:
 		# print(processed_contracts, "vs", contracts_with_sources)
 		for cname, cdepends in dependency_graph.items():
