@@ -9,7 +9,7 @@ import argparse as ap
 import sys
 import subprocess
 
-def flatten_contract(solc_AST, output_dest):
+def flatten_contract(solc_AST, output_dest, target_solidity_file):
 	contract_regex = re.compile(r'(ContractDefinition \"(.+)\"(?:\n\s+Gas costs: \d+)?\n(?: +.+\n)+)')
 	contract_source_regex = re.compile(r'ContractDefinition \".+\"(?:\n\s+Gas costs: \d+)?\n +Source: "(.+)"')
 	inheritance_regex = re.compile(r'InheritanceSpecifier(?:\n\s+Gas costs: \d+)?\n\s+Source: "(.+)"')
@@ -55,7 +55,8 @@ def flatten_contract(solc_AST, output_dest):
 		return
 
 	processed_contracts = set()
-	output_solidity_code = "pragma solidity ^0.4.13;\n\n"
+	pragma=open(target_solidity_file).readline()
+	output_solidity_code = "{0}\n".format(pragma)
 	while processed_contracts != contracts_with_sources:
 		# print(processed_contracts, "vs", contracts_with_sources)
 		for cname, cdepends in dependency_graph.items():
@@ -89,13 +90,13 @@ def main():
 		help="Specifies the path replacements to pass onto solidity. See solc --help for more information.")
 	args = parser.parse_args()
 
+	solc_args =  ["solc", "--allow-paths", "."]
 	if args.solc_paths:
-		solc_args = ["solc", args.solc_paths, "--ast", args.target_solidity_file]
-	else:
-		solc_args = ["solc", "--ast", args.target_solidity_file]
+		solc_args.append(args.solc_paths)
+	solc_args.extend(["--ast", args.target_solidity_file])
 	solc_proc = subprocess.run(solc_args, stdout=subprocess.PIPE, universal_newlines=True)
 	solc_proc.check_returncode()
-	flatten_contract(solc_proc.stdout, args.output)
+	flatten_contract(solc_proc.stdout, args.output, args.target_solidity_file)
 
 if __name__ == '__main__':
 	main()
